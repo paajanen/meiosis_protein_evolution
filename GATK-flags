@@ -1,0 +1,15 @@
+gatk-launch  HaplotypeCaller -I  -R -O  -ploidy 2  -RF NotDuplicateReadFilter  
+
+And then jointly genotyped as one large sample using
+
+gatk-launch GenotypeGVCFs -R REFERENCE  -O genotyped.merged.vcf.gz -G StandardAnnotation -V gendb://database   --use-new-qual-calculator
+
+The joint genotyped vcf was filtered in two  steps using the Best Practise filters and biallelic sites only.
+
+gatk-launch  SelectVariants -V $GENE.genotyped.merged.vcf.gz  -O $GENE.genotyped.merged.vcf.BI.gz --select-type-to-exclude INDEL --select-type-to-exclude MIXED --restrict-alleles-to BIALLELIC
+
+gatk-launch  VariantFiltration  -V $GENE.genotyped.merged.vcf.BI.gz  -O $GENE.genotyped.merged.vcf.BI_BP.gz --filter-expression "QD<2.0" --filter-name QD --filter-expression "DP>8144" --filter-name DP --filter-expression "FS>60.0" --filter-name FS --filter-expression "MQ<40.0" --filter-name MQ --filter-expression "HaplotypeScore>13.0" --filter-name HaplotypeScore --filter-expression "MappingQualityRankSumTest<-12.5"  --filter-name  MappingQualityRankSumTest --filter-expression "ReadPosRankSum<-8.0"  --filter-name ReadPosRankSum
+
+And finally the variants that Passed all the filters were selected with
+
+gatk-launch  SelectVariants   -V $GENE.genotyped.merged.vcf.BI_BP.gz -O $GENE.genotyped.merged.PASS.vcf.gz --exclude-filtered
