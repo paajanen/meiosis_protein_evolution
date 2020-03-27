@@ -1,2 +1,2 @@
 # meiosis_protein_evolution
-Code associated with the paper "Meiosis protein evolution in tetraploid populations of an outcrossing perennial, Arabidopsis arenosa"
+Code associated with the paper "De-novo mutation and rapid (co-)evolution as the main drivers of protein divergence during meiotic adaptation in Arabidopsis arenosa"
